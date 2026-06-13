@@ -59,10 +59,15 @@ The Dispatcher implements the **flow-control layer** in the SuperInstance actor 
 
 See [ARCHITECTURE.md](https://github.com/SuperInstance/SuperInstance/blob/main/ARCHITECTURE.md).
 
+**Little's Law connection:** The optimal capacity can be derived from Little's Law: L = λ × W, where L = average queue length, λ = arrival rate, W = mean processing time. Setting capacity ≈ 2L provides a safety buffer for burst arrivals while bounding worst-case latency to 2W. For example, with λ = 1000 msg/s and W = 5ms, the optimal capacity is 2 × 1000 × 0.005 = 10 messages — enough to absorb bursts without excessive latency.
+
+**Comparison with reactive streams:** The Dispatcher's synchronous rejection model is equivalent to the `Strategy.REJECT` operator in Project Reactor and the `OverflowStrategy.dropHead` in Akka Streams. The key advantage over asynchronous backpressure signaling (like reactive-streams `request(n)`) is simplicity: no coordination channel is needed, and the producer receives feedback in the same call stack.
+
 ## References
 
 1. Hewitt, C. (1973). "A Universal Modular Actor Formalism for Artificial Intelligence." *IJCAI*.
 2. Nygard, M. (2018). *Release It!* 2nd ed. Pragmatic Bookshelf. Chapter 5: Stability Patterns.
+3. Little, J.D.C. (1961). "A Proof for the Queuing Formula L = λW." *Operations Research*, 9(3), 383–387.
 
 ## License
 
